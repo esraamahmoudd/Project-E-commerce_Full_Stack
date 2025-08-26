@@ -1,1 +1,70 @@
-<p>login works!</p>
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <h2><i class="fa fa-user-circle me-2"></i>Login</h2>
+      <p class="text-muted">Welcome back! Please sign in to your account.</p>
+    </div>
+
+    @if (errorMessage) {
+      <div class="alert alert-danger" role="alert">
+        <i class="fa fa-exclamation-triangle me-2"></i>
+        {{ errorMessage }}
+      </div>
+    }
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <!-- Email -->
+      <div class="mb-3">
+        <label for="email" class="form-label">
+          <i class="fa fa-envelope me-2"></i>Email Address
+        </label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          formControlName="email"
+          placeholder="Enter your email"
+        />
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        <label for="password" class="form-label">
+          <i class="fa fa-lock me-2"></i>Password
+        </label>
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          formControlName="password"
+          placeholder="Enter your password"
+        />
+      </div>
+
+      <div class="d-grid gap-2">
+        <button
+          type="submit"
+          class="btn btn-primary btn-lg"
+          [disabled]="loading"
+        >
+          @if (loading) {
+            <span
+              class="spinner-border spinner-border-sm me-2"
+              role="status"
+            ></span>
+            Signing In...
+          } @else {
+            <i class="fa fa-sign-in-alt me-2"></i> Sign In
+          }
+        </button>
+      </div>
+    </form>
+
+    <div class="login-footer">
+      <p class="text-center mb-0">
+        Don't have an account?
+        <a routerLink="/register" class="text-primary">Sign up here</a>
+      </p>
+    </div>
+  </div>
+</div>
