@@ -1,0 +1,119 @@
+<div class="register-container">
+  <div class="register-card">
+    <div class="register-header">
+      <h2><i class="fa fa-user-plus me-2"></i>Create Account</h2>
+      <p class="text-muted">Join our community and start shopping!</p>
+    </div>
+
+    @if(error) {
+      <div class="alert alert-danger" role="alert">
+        <i class="fa fa-exclamation-triangle me-2"></i>
+        {{ successMessage }}
+      </div>
+    }
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+      <div class="row">
+        <!-- First Name -->
+        <div class="col-md-6 mb-3">
+          <label for="FirstName" class="form-label">
+            <i class="fa fa-user me-2"></i>First Name
+          </label>
+          <input type="text" id="FirstName" class="form-control"
+                 formControlName="FirstName"
+                 placeholder="Enter your first name"
+                 (blur)="onFieldBlur('FirstName')" 
+                 (input)="onFieldInput('FirstName')"
+                 [class.is-invalid]="formErrors['FirstName']">
+          @if (formErrors['FirstName']) {
+            <div class="invalid-feedback">{{ formErrors['FirstName'] }}</div>
+          }
+        </div>
+
+        <!-- Last Name -->
+        <div class="col-md-6 mb-3">
+          <label for="LastName" class="form-label">
+            <i class="fa fa-user me-2"></i>Last Name
+          </label>
+          <input type="text" id="LastName" class="form-control"
+                 formControlName="LastName"
+                 placeholder="Enter your last name"
+                 (blur)="onFieldBlur('LastName')" 
+                 (input)="onFieldInput('LastName')"
+                 [class.is-invalid]="formErrors['LastName']">
+          @if (formErrors['LastName']) {
+            <div class="invalid-feedback">{{ formErrors['LastName'] }}</div>
+          }
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="mb-3">
+        <label for="email" class="form-label">
+          <i class="fa fa-envelope me-2"></i>Email
+        </label>
+        <input type="email" id="email" class="form-control"
+               formControlName="email"
+               placeholder="Enter your email"
+               (blur)="onFieldBlur('email')" 
+               (input)="onFieldInput('email')"
+               [class.is-invalid]="formErrors['email']">
+        @if (formErrors['email']) {
+          <div class="invalid-feedback">{{ formErrors['email'] }}</div>
+        }
+      </div>
+
+      <!-- Password -->
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="password" class="form-label">
+            <i class="fa fa-lock me-2"></i>Password
+          </label>
+          <input type="password" id="password" class="form-control"
+                 formControlName="password"
+                 placeholder="Enter password"
+                 (blur)="onFieldBlur('password')" 
+                 (input)="onFieldInput('password')"
+                 [class.is-invalid]="formErrors['password']">
+          @if (formErrors['password']) {
+            <div class="invalid-feedback">{{ formErrors['password'] }}</div>
+          }
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label for="confirmPassword" class="form-label">
+            <i class="fa fa-lock me-2"></i>Confirm Password
+          </label>
+          <input type="password" id="confirmPassword" class="form-control"
+                 formControlName="confirmPassword"
+                 placeholder="Confirm password"
+                 (blur)="onFieldBlur('confirmPassword')" 
+                 (input)="onFieldInput('confirmPassword')"
+                 [class.is-invalid]="formErrors['confirmPassword']">
+          @if (formErrors['confirmPassword']) {
+            <div class="invalid-feedback">{{ formErrors['confirmPassword'] }}</div>
+          }
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary btn-lg"
+                [disabled]="registerForm.invalid || loading">
+          @if (loading) {
+            <span class="spinner-border spinner-border-sm me-2"></span> Creating Account...
+          } @else {
+            <i class="fa fa-user-plus me-2"></i> Create Account
+          }
+        </button>
+      </div>
+    </form>
+
+    <div class="register-footer">
+      <p class="text-center mt-3">
+        Already have an account? 
+        <a routerLink="/login" class="text-primary">Sign in here</a>
+      </p>
+    </div>
+  </div>
+</div>
