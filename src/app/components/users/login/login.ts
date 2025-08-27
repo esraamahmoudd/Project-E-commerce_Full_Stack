@@ -29,7 +29,8 @@ export class Login {
       this.userservice.login(this.loginForm.value).subscribe({
         next: (res: any) => {
           this.loading = false;
-          localStorage.setItem('token', res.token); 
+          this.userservice.saveToken(res.token);
+          this.userservice.saveUser(res.user);
           this.router.navigate(['/prodcuts']); 
         },
         error: (err) => {

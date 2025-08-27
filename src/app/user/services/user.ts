@@ -7,7 +7,7 @@ import { IUsers } from '../../types/users';
   providedIn: 'root'
 })
 export class Userservice {
-  private apiUrl = 'http://localhost:4000/api/users';
+  private apiUrl = 'http://localhost:3000/api/users';
 
   constructor(private http: HttpClient) {}
 
@@ -30,6 +30,8 @@ export class Userservice {
     localStorage.setItem('token', token);
   }
 
+
+
  
   getToken(): string | null {
     return localStorage.getItem('token');
@@ -42,7 +44,8 @@ export class Userservice {
 
  
   logout(): void {
-    localStorage.removeItem('token');
+   localStorage.removeItem('token');
+    localStorage.removeItem('user');
   }
 
   
@@ -51,4 +54,12 @@ export class Userservice {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<IUsers[]>(this.apiUrl, { headers });
   }
+  saveUser(user: IUsers): void {
+  localStorage.setItem('user', JSON.stringify(user));
+}
+
+getUser(): IUsers | null {
+  const user = localStorage.getItem('user');
+  return user ? JSON.parse(user) : null;
+}
 }
