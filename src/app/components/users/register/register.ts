@@ -1,22 +1,24 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { User } from '../../../user/services/user';
+import { Userservice } from '../../../user/services/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './register.html',
-  styleUrl: './register.css'
+  styleUrls: ['./register.css']
 })
 export class Register {
- registerForm: FormGroup;
+  registerForm: FormGroup;
   loading = false;
   error: string = '';
+   successMessage: string = '';
   formErrors: any = {};
 
-  constructor(private fb: FormBuilder, private userService: User) {
+  constructor(private fb: FormBuilder, private userService: Userservice, private router: Router) {
     this.registerForm = this.fb.group({
       FirstName: ['', [Validators.required, Validators.minLength(3)]],
       LastName: ['', [Validators.required, Validators.minLength(3)]],
@@ -26,14 +28,12 @@ export class Register {
     }, { validators: this.passwordMatchValidator });
   }
 
- 
   passwordMatchValidator(form: FormGroup) {
     const pass = form.get('password')?.value;
     const confirm = form.get('confirmPassword')?.value;
     return pass === confirm ? null : { mismatch: true };
   }
 
-  
   onFieldBlur(field: string) {
     const control = this.registerForm.get(field);
     if (control && control.invalid && (control.dirty || control.touched)) {
@@ -56,29 +56,34 @@ export class Register {
     return `Invalid ${field}`;
   }
 
-  
   onSubmit() {
-    if (this.registerForm.valid) {
-      this.loading = true;
-      this.error = '';
+     if (this.registerForm.valid) {
+    this.loading = true;
+    this.error = '';
 
-      const payload = {
-        FirstName: this.registerForm.value.FirstName,
-        LastName: this.registerForm.value.LastName,
-        email: this.registerForm.value.email,
-        password: this.registerForm.value.password
-      };
+    const payload = {
+      FirstName: this.registerForm.value.FirstName,
+      LastName: this.registerForm.value.LastName,
+      email: this.registerForm.value.email,
+      password: this.registerForm.value.password,
+      confirmPassword: this.registerForm.value.confirmPassword
+    };
 
-      this.userService.register(payload).subscribe({
-        next: () => {
-          this.loading = false;
-          alert('✅ Account Created Successfully!');
+    this.userService.register(payload).subscribe({
+      next: () => {
+        this.loading = false;
+           this.successMessage = '✅ Account Created Successfully!';
+        this.registerForm.reset();
+          setTimeout(() => {
+            this.router.navigate(['/products']);
+          }, 2000);
         },
-        error: (err) => {
-          this.loading = false;
-          this.error = err.error?.message || 'Registration failed';
-        }
-      });
-    }
+      
+      error: (err) => {
+        this.loading = false;
+        this.error = err.error?.message || 'Registration failed';
+      }
+    });
   }
+}
 }

@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
+import { Userservice } from '../../../user/services/user';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule,RouterOutlet],
   templateUrl: '../../users/login/login.html',
   styleUrl: '../../users/login/login.css',
 })
@@ -15,7 +16,7 @@ export class Login {
   loading = false;
   errorMessage: string | null = null;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(private fb: FormBuilder, private router: Router , private userservice: Userservice) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
@@ -23,25 +24,19 @@ export class Login {
   }
 
   onSubmit() {
-    if (this.loginForm.invalid) {
-      this.errorMessage = 'Please fill in all fields correctly.';
-      return;
+  if (this.loginForm.valid) {
+      this.loading = true;
+      this.userservice.login(this.loginForm.value).subscribe({
+        next: (res: any) => {
+          this.loading = false;
+          localStorage.setItem('token', res.token); 
+          this.router.navigate(['/prodcuts']); 
+        },
+        error: (err) => {
+          this.loading = false;
+          this.errorMessage = err.error?.message || 'Login failed';
+        }
+      });
     }
-
-    this.loading = true;
-    this.errorMessage = null;
-
-    // Simulate API request
-    setTimeout(() => {
-      this.loading = false;
-
-      const { email, password } = this.loginForm.value;
-
-      if (email === 'test@example.com' && password === '123456') {
-        this.router.navigate(['/profile']);
-      } else {
-        this.errorMessage = 'Invalid email or password!';
-      }
-    }, 1500);
   }
 }
