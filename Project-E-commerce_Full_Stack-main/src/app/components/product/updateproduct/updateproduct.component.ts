@@ -28,16 +28,16 @@ export class UpdateproductComponent implements OnInit {
     this.productId = this.route.snapshot.paramMap.get('id')!;
 
    this.updateForm = this.fb.group({
-  title: ["", [Validators.required, Validators.minLength(3)]],
+  name: ["", [Validators.required, Validators.minLength(3)]],
   description: ["", [Validators.required, Validators.minLength(5)]],
   price: ["", [Validators.required, Validators.min(0)]],
   stock: ["", [Validators.required, Validators.min(0)]]
 });
 
-    
+
     this.productService.getProduct(this.productId).subscribe(product => {
       this.updateForm.patchValue({
-        title: product.name,
+        name: product.name,
         description: product.description,
         price: product.price,
         stock: product.stock
@@ -54,23 +54,27 @@ export class UpdateproductComponent implements OnInit {
   }
 
   onUpdate() {
-    this.submitted = true;
+  this.submitted = true;
 
-    if (this.updateForm.valid && this.selectedFile) {
-      const formData = new FormData();
-      formData.append("title", this.updateForm.get("title")!.value);
-      formData.append("description", this.updateForm.get("description")!.value);
-      formData.append("price", this.updateForm.get("price")!.value);
-      formData.append("stock", this.updateForm.get("stock")!.value);
+  if (this.updateForm.valid) {
+    const formData = new FormData();
+    formData.append("name", this.updateForm.get("name")!.value);
+    formData.append("description", this.updateForm.get("description")!.value);
+    formData.append("price", this.updateForm.get("price")!.value);
+    formData.append("stock", this.updateForm.get("stock")!.value);
+
+    if (this.selectedFile) {
       formData.append("image", this.selectedFile);
-
-      this.productService.updateProduct(this.productId, formData).subscribe({
-        next: (res) => {
-          console.log("Updated:", res);
-          alert("Product updated successfully!");
-        },
-        error: (err) => console.error("Update error:", err)
-      });
     }
+
+    this.productService.updateProduct(this.productId, formData).subscribe({
+      next: (res) => {
+        console.log("Updated:", res);
+        alert("Product updated successfully!");
+      },
+      error: (err) => console.error("Update error:", err)
+    });
   }
+}
+
 }
