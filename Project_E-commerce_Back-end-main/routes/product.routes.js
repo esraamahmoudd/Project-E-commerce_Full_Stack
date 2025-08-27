@@ -8,14 +8,15 @@ const router = express.Router();
 const upload =require('../uploads/uploadImage')
 router.route('/')
     .get(productcontroller.getAllProducts)
-    .post(verifyToken, allowTo('admin'),upload.single('image'),productcontroller.createProduct
+    .post(upload.single('image'),productcontroller.createProduct
     )
     
 
 router.route('/:productId')
     .get(productcontroller.getProduct)
-    .patch(verifyToken, allowTo('admin'),upload.single('image'),productcontroller.updateProduct)
-    .delete(verifyToken, allowTo('admin'),productcontroller.deleteProduct);
+    .patch(upload.single('image'),productcontroller.updateProduct)
+    .delete(productcontroller.deleteProduct);
 
 module.exports = router;
+
 
